@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #100809, #bc57c9);
+            font-family: 'Arial, sans-serif';
+            overflow: hidden;
+        }
+        
+        /* Falling Hearts Animation */
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        .falling-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .falling-hearts div {
+            position: absolute;
+            color: #e63946;
+            font-size: 20px;
+            animation: fall 5s linear infinite;
+        }
+        .falling-hearts div:nth-child(2n) {
+            animation-duration: 4s;
+            font-size: 25px;
+        }
+        .falling-hearts div:nth-child(3n) {
+            animation-duration: 6s;
+            font-size: 18px;
+        }
+        
+        .card-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+        }
+        
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            cursor: pointer;
+        }
+        .card-container:hover .card {
+            transform: rotateY(180deg);
+        }
+        
+        .card .side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .card .front {
+            background: #47b8ae;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #030e2e;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .card .back {
+            background: #71c7e7;
+            color: #030e2e;
+            text-align: center;
+            padding: 20px;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .back h2 {
+            margin-bottom: 10px;
+            color: #4d0415;
+        }
+        .back p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .heart {
+            color: #da032e;
+            font-size: 50px;
+            margin: 10px 0;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Hover Effect for Surprise Link */
+        .back a {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #3b065f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back a:hover {
+            color: #e63946;
+            font-weight: bold;
+        }
+
+        /* Popup Image Styles */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(74, 6, 93, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .popup img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 5px solid #3cacb2;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .popup:target {
+            opacity: 1;
+            visibility: visible;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-hearts">
+        <div>&hearts;</div>
+        <div>&hearts;</div>
+        <div>&hearts;</div>
+        <div>&hearts;</div>
+        <div>&hearts;</div>
+    </div>
+
+    <div class="card-container">
+        <div class="card">
+            <div class="side front">
+                <span>Happy 2 Years!</span>
+            </div>
+            <div class="side back">
+                <h2>Dear Snowman</h2>
+                <div class="heart">&hearts;</div>
+                <p>Damn today marks the 2 years that we have spent together. Many fight, ups and downs and a break too-..But what matters in the end is that we still care and love each other. 
+                    Happy 2 years <3
+                </p>
+                <a href="#popup">Click to see a surprise</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Image -->
+    <div id="popup" class="popup">
+        <a href="#" class="close-btn">&times;</a>
+        <img src="hand.jpg" alt="Special Memory">
+    </div>
+
+    <audio autoplay loop>
+        <source src="Perfect - Ed Sheeran Karaoke No Guide Melody Instrumental.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        // Add falling hearts dynamically
+        const fallingHearts = document.querySelector('.falling-hearts');
+        for (let i = 0; i < 30; i++) {
+            const heart = document.createElement('div');
+            heart.innerHTML = '&hearts;';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            fallingHearts.appendChild(heart);
+        }
+    </script>
+</body>
+</html>
